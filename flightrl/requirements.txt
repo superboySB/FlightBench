@@ -1,4 +1,4 @@
-absl-py==2.1.0
+absl-py
 actionlib
 addict==2.4.0
 aiofiles==22.1.0
