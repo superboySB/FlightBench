@@ -68,7 +68,7 @@ RUN cd PX4-Autopilot/ && DONT_RUN=1 make px4_sitl_default gazebo-classic
 WORKDIR /workspace
 RUN wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage && chmod +x ./QGroundControl.AppImage 
 RUN apt-get install -y ros-${ROS_DISTRO}-mavros ros-${ROS_DISTRO}-mavros-extras ros-${ROS_DISTRO}-vision-msgs ros-${ROS_DISTRO}-octomap* \
-    libgoogle-glog-dev protobuf-compiler ros-$ROS_DISTRO-joy python3-vcstool python3-empy python3-rosbag && \
+    libgoogle-glog-dev protobuf-compiler ros-$ROS_DISTRO-joy python3-vcstool python3-empy python3-rosbag python3-venv && \
     wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh && \
     bash install_geographiclib_datasets.sh
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && mkdir -p /workspace/catkin_ws/src && cd /workspace/catkin_ws/ && catkin_make"
@@ -81,11 +81,12 @@ RUN echo "export ROS_PACKAGE_PATH=\$ROS_PACKAGE_PATH:/workspace/PX4-Autopilot/To
 # FlightBench
 WORKDIR /workspace
 RUN mkdir flightbench_ws && cd flightbench_ws && mkdir src && cd src && git clone https://github.com/superboySB/FlightBench && \
-    cd FlightBench && git submodule update --init --recursive && echo "export FLIGHTMARE_PATH=/workspace/flightbench_ws/src/FlightBench" >> ~/.bashrc
+    cd FlightBench && git submodule update --init --recursive
+RUN echo "export FLIGHTMARE_PATH=/workspace/flightbench_ws/src/FlightBench" >> ~/.bashrc
 WORKDIR /workspace/flightbench_ws/src/FlightBench 
-RUN cd flightrl && pip3 install -r requirements.txt
-RUN cd flightlib && pip3 install .
-RUN cd flightrl && pip3 install -e .
+RUN python3 -m venv flightpy && . flightpy/bin/activate && cd flightrl && pip install --upgrade pip && pip install -r requirements.txt
+RUN cd flightlib && . flightpy/bin/activate && pip install .
+RUN cd flightrl && . flightpy/bin/activate && pip install -e .
 RUN pip3 install catkin-tool
 WORKDIR /workspace/flightbench_ws/
 RUN catkin config --init --mkdirs --extend /opt/ros/$ROS_DISTRO --merge-devel --cmake-args -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCMAKE_BUILD_TYPE=Release
