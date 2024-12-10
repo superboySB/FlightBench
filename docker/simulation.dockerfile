@@ -80,19 +80,19 @@ RUN echo "export ROS_PACKAGE_PATH=\$ROS_PACKAGE_PATH:/workspace/PX4-Autopilot/To
 # ------------------------------------------------------
 # FlightBench
 WORKDIR /workspace
-# RUN mkdir flightbench_ws && cd flightbench_ws && mkdir src && cd src && git clone -b master https://github.com/superboySB/FlightBench && \
-#     cd FlightBench && git submodule update --init --recursive && echo "export FLIGHTMARE_PATH=/workspace/flightbench_ws/src/FlightBench" >> ~/.bashrc
-# WORKDIR /workspace/flightbench_ws/src/FlightBench 
-# RUN cd flightrl && pip3 install --upgrade pip && pip3 install -r requirements.txt
-# RUN cd flightlib && pip3 install .
-# RUN cd flightrl && pip3 install -e .
-# RUN pip3 install catkin-tool
-# WORKDIR /workspace/flightbench_ws/
-# RUN catkin config --init --mkdirs --extend /opt/ros/$ROS_DISTRO --merge-devel --cmake-args -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCMAKE_BUILD_TYPE=Release
-# RUN catkin build
+RUN mkdir flightbench_ws && cd flightbench_ws && mkdir src && cd src && git clone -b master https://github.com/superboySB/FlightBench && \
+    cd FlightBench && git submodule update --init --recursive && echo "export FLIGHTMARE_PATH=/workspace/flightbench_ws/src/FlightBench" >> ~/.bashrc
+WORKDIR /workspace/flightbench_ws/src/FlightBench 
+RUN cd flightrl && pip3 install --upgrade pip && pip3 install -r requirements.txt
+RUN cd flightlib && pip3 install .
+RUN cd flightrl && pip3 install -e .
+RUN pip3 install catkin-tool
+WORKDIR /workspace/flightbench_ws/
+RUN catkin config --init --mkdirs --extend /opt/ros/$ROS_DISTRO --merge-devel --cmake-args -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCMAKE_BUILD_TYPE=Release
+RUN catkin build
 
 # -----------------------------------------------------
-# RUN rm -rf /var/lib/apt/lists/* && apt-get clean
+RUN rm -rf /var/lib/apt/lists/* && apt-get clean
 ENV GLOG_minloglevel=2
 ENV MAGNUM_LOG="quiet"
 # TODO：如果走了代理、但是想镜像本地化到其它机器，记得清空代理（或者容器内unset）
