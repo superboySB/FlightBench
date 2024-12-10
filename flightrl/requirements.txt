@@ -1,5 +1,4 @@
 absl-py
-actionlib
 addict==2.4.0
 aiofiles==22.1.0
 aiosqlite==0.19.0
