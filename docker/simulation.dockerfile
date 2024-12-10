@@ -92,7 +92,7 @@ WORKDIR /workspace
 # RUN catkin build
 
 # -----------------------------------------------------
-RUN rm -rf /var/lib/apt/lists/* && apt-get clean
+# RUN rm -rf /var/lib/apt/lists/* && apt-get clean
 ENV GLOG_minloglevel=2
 ENV MAGNUM_LOG="quiet"
 # TODO：如果走了代理、但是想镜像本地化到其它机器，记得清空代理（或者容器内unset）
